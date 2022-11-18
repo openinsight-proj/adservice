@@ -70,10 +70,10 @@
     </dependency>
 
     <dependency>
-			<groupId>com.alibaba.csp</groupId>
-			<artifactId>sentinel-metric-exporter</artifactId>
-			<version>1.8.4</version>
-		</dependency>
+      <groupId>com.alibaba.csp</groupId>
+      <artifactId>sentinel-metric-exporter</artifactId>
+      <version>1.8.4</version>
+    </dependency>
     
     <dependency>
       <groupId>io.projectreactor</groupId>
@@ -138,6 +138,12 @@
       <groupId>io.opentelemetry</groupId>
       <artifactId>opentelemetry-extension-annotations</artifactId>
       <version>${opentelemetry.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-exporter-prometheus</artifactId>
+      <version>1.20.1-alpha</version>
     </dependency>
   </dependencies>
 

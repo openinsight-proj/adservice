@@ -21,6 +21,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,12 +32,14 @@ import java.util.Random;
 public class AdServiceGrpcService extends AdServiceGrpc.AdServiceImplBase {
 
     private static final Logger logger = LogManager.getLogger(AdServiceGrpcService.class);
-    private static final ImmutableListMultimap<String, Ad> adsMap = createAdsMap();
+    private final ImmutableListMultimap<String, Ad> adsMap = createAdsMap();
 
-    private static final String SINGALTEXT =" -- by a new impl adservice";
+    @Value("${spring.extraAdLabel}")
+    private String text;
+
     @Override
     public void getAds(AdRequest req, StreamObserver<AdResponse> responseObserver) {
-
+        logger.info(text);
         // get the current span in context
         Span span = Span.current();
         try{
@@ -61,8 +64,15 @@ public class AdServiceGrpcService extends AdServiceGrpc.AdServiceImplBase {
             } else {
                 allAds = getRandomAds();
             }
-            span.setAttribute("app.ads.count", allAds.size());
-            AdResponse reply = AdResponse.newBuilder().addAllAds(allAds).build();
+            if (allAds.isEmpty()) {
+                // Serve random ads.
+                allAds = getRandomAds();
+            }
+
+            List<Ad>  allAdsLabeled = addLabel(allAds);
+
+            span.setAttribute("app.ads.count", allAdsLabeled.size());
+            AdResponse reply = AdResponse.newBuilder().addAllAds(allAdsLabeled).build();
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
         } catch (StatusRuntimeException e) {
@@ -72,7 +82,6 @@ public class AdServiceGrpcService extends AdServiceGrpc.AdServiceImplBase {
             logger.log(Level.WARN, "GetAds Failed with status {}", e.getStatus());
             responseObserver.onError(e);
         }
-
     }
 
     @WithSpan("getAdsByCategory")
@@ -105,41 +114,41 @@ public class AdServiceGrpcService extends AdServiceGrpc.AdServiceImplBase {
         }
         return ads;
     }
-    private static ImmutableListMultimap<String, Ad> createAdsMap() {
+    private ImmutableListMultimap<String, Ad> createAdsMap() {
         Ad binoculars =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/2ZYFJ3GM2N")
-                        .setText("Roof Binoculars for sale. 50% off."+ SINGALTEXT)
+                        .setText("Roof Binoculars for sale. 50% off.")
                         .build();
         Ad explorerTelescope =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/66VCHSJNUP")
-                        .setText("Starsense Explorer Refractor Telescope for sale. 20% off."+ SINGALTEXT)
+                        .setText("Starsense Explorer Refractor Telescope for sale. 20% off.")
                         .build();
         Ad colorImager =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/0PUK6V6EV0")
-                        .setText("Solar System Color Imager for sale. 30% off."+ SINGALTEXT)
+                        .setText("Solar System Color Imager for sale. 30% off.")
                         .build();
         Ad opticalTube =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/9SIQT8TOJO")
-                        .setText("Optical Tube Assembly for sale. 10% off."+ SINGALTEXT)
+                        .setText("Optical Tube Assembly for sale. 10% off.")
                         .build();
         Ad travelTelescope =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/1YMWWN1N4O")
-                        .setText("Eclipsmart Travel Refractor Telescope for sale. Buy one, get second kit for free"+ SINGALTEXT)
+                        .setText("Eclipsmart Travel Refractor Telescope for sale. Buy one, get second kit for free")
                         .build();
         Ad solarFilter =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/6E92ZMYYFZ")
-                        .setText("Solar Filter for sale. Buy two, get third one for free"+ SINGALTEXT)
+                        .setText("Solar Filter for sale. Buy two, get third one for free")
                         .build();
         Ad cleaningKit =
                 Ad.newBuilder()
                         .setRedirectUrl("/product/L9ECAV7KIM")
-                        .setText("Lens Cleaning Kit for sale. Buy one, get second one for free"+ SINGALTEXT)
+                        .setText("Lens Cleaning Kit for sale. Buy one, get second one for free")
                         .build();
         return ImmutableListMultimap.<String, Ad>builder()
                 .putAll("binoculars", binoculars)
@@ -148,5 +157,18 @@ public class AdServiceGrpcService extends AdServiceGrpc.AdServiceImplBase {
                 .putAll("assembly", opticalTube)
                 .putAll("travel", travelTelescope)
                 .build();
+    }
+
+    private List<Ad> addLabel(List<Ad> allAds){
+        List<Ad> allAdsLabeled = new ArrayList<>();
+
+        for(Ad old:allAds){
+            Ad labeledAd = Ad.newBuilder()
+                    .setRedirectUrl(old.getRedirectUrl())
+                    .setText(old.getText()+" -- "+text)
+                    .build();
+            allAdsLabeled.add(labeledAd);
+        }
+        return allAdsLabeled;
     }
 }

@@ -16,3 +16,13 @@ This repo re-implements opentelemetry-demo-webstore's adservice with nacos regis
 ```shell
 grpcurl -plaintext -d '{"context_keys": ["binoculars","telescopes"]}' localhost:8080 hipstershop.AdService/GetAds
 ```
+
+## metrics
+
+adservice-springcloud will emit two metrics:
+
+| Name                  | Description              | Unit | Type      |
+| --------------------- | ------------------------ | ---- | --------- |
+| grpc_call_total       | record grpc call totals  | N/A  | Counter   |
+| grpc_duration_seconds | record grpc call latency | ms   | histogram |
+

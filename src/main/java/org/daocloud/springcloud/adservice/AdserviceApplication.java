@@ -11,6 +11,5 @@ public class AdserviceApplication {
     public static void main(String[] args) {
         SpringApplication.run(AdserviceApplication.class, args);
     }
-
 }
 

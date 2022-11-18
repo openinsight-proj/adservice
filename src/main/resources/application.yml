@@ -106,3 +106,9 @@ project:
 grpc:
   server:
     port: 8080
+---
+meter:
+    port: 8888
+---
+spring:
+  extraAdLabel: Daocloud
