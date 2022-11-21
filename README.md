@@ -21,8 +21,8 @@ grpcurl -plaintext -d '{"context_keys": ["binoculars","telescopes"]}' localhost:
 
 adservice-springcloud will emit two metrics:
 
-| Name                  | Description              | Unit | Type      |
-| --------------------- | ------------------------ | ---- | --------- |
-| grpc_call_total       | record grpc call totals  | N/A  | Counter   |
-| grpc_duration_seconds | record grpc call latency | ms   | histogram |
+| Name                         | Description              | Unit | Type      |
+| ---------------------------- | ------------------------ | ---- | --------- |
+| grpc_call_total              | record grpc call totals  | N/A  | Counter   |
+| grpc_duration_seconds_bucket | record grpc call latency | ms   | histogram |
 
