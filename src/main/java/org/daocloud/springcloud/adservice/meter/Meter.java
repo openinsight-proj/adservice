@@ -37,7 +37,7 @@ public final class Meter {
         meterProvider = SdkMeterProvider.builder().registerMetricReader(prometheusReader).build();
 
         io.opentelemetry.api.metrics.Meter meter = meterProvider.get("adservice");
-        grpcCalls = meter.counterBuilder("grpc_call_total")
+        grpcCalls = meter.counterBuilder("grpc_call")
                 .setDescription("record grpc call totals")
                 .build();
 
