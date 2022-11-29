@@ -1,4 +1,4 @@
-FROM docker.m.daocloud.io/library/openjdk:11.0.15 AS builder
+FROM registry.cn-hangzhou.aliyuncs.com/mabing/adservice:v1.0 AS builder
 
 WORKDIR /app/
 
