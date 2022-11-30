@@ -40,6 +40,8 @@ management:
 spring:
   cloud:
     nacos:
+      config:
+        enabled: false
       discovery:
         enabled: false
         # 注册中心地址
