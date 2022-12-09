@@ -43,7 +43,7 @@ to disable this feature.
 * Please notes the application.yml file:
 
   ```
-  adservice/src/main/resources/application.yml
+  adservice/src/main/resources/bootstrap.yml
   ```
 
 * Make sure your Dockerfile has: `JAVA_OPTS` env:
