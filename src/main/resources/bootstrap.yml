@@ -115,7 +115,7 @@ spring:
 ---
 project:
   # 服务注册在sentinel中的名称, 建议与nacos注册服务名相同
-  name: ${spring.cloud.nacos.discovery.namespace}::${spring.cloud.nacos.discovery.group}::${spring.application.name}
+  name: ${spring.cloud.nacos.discovery.namespace}@@${spring.cloud.nacos.discovery.group}@@${spring.application.name}
 
 ---
 grpc:
