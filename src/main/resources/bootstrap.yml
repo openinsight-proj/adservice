@@ -124,7 +124,7 @@ spring:
 
 ---
 project:
-  # 服务注册在sSentinel中的名称（无特殊需求，且使用DCE 5.0产品的用户无需修改）
+  # 服务注册在Sentinel中的名称（无特殊需求，且使用DCE 5.0产品的用户无需修改）
   name: ${spring.cloud.nacos.discovery.namespace}@@${spring.cloud.nacos.discovery.group}@@${spring.application.name}
 
 ---
